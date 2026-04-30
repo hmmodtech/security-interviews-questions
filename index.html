@@ -1,82 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IRC — Security Trainer (Ahmed Abu Jami Edition)</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#ffffff; --text:#1a1a1a; --text2:#555551; --border:#e0dfd8;
-    --red:#c0392b; --blue:#1a5276; --green:#1e6b3a; --amber:#7d5a0a;
-    --radius:10px; --radius-sm:6px;
-  }
-  body{font-family:-apple-system,sans-serif; background:#eeede9; padding:16px; color:var(--text)}
-  .app{max-width:820px; margin:0 auto}
-  .card{background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:15px}
-  .title{font-size:20px; font-weight:700; margin-bottom:5px}
-  .btn{cursor:pointer; padding:8px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); background:#fff; transition:0.2s; font-size:13px}
-  .btn-primary{background:var(--red); color:#fff; border-color:var(--red)}
-  .btn-blue{background:#eaf2fb; color:var(--blue); border-color:var(--blue)}
-  .btn-green{background:#eafaf1; color:var(--green); border-color:var(--green)}
-  .practice-area{width:100%; min-height:100px; padding:10px; margin:10px 0; border:1px solid var(--blue); border-radius:var(--radius-sm)}
-  .ans-box{display:none; background:#f9f9f9; padding:15px; border-radius:var(--radius-sm); margin-top:10px; border-left:4px solid var(--green)}
-  .ans-box.show{display:block}
-  .kp{font-size:13px; color:var(--text2); margin-left:15px; list-style-type: disc}
-  .stats-bar{display:flex; gap:10px; margin-bottom:15px}
-  .stat-item{background:#fff; padding:10px; border-radius:var(--radius); flex:1; text-align:center; border:1px solid var(--border)}
-</style>
-</head>
-<body>
-<div class="app">
-  <div class="card">
-    <div class="title">IRC Access & Security Assistant Trainer</div>
-    <div style="color:var(--text2); font-size:14px">Personalized for Ahmed Abu Jami</div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stat-item"><div id="s-total" style="font-size:18px; font-weight:700">50</div><div>Questions</div></div>
-    <div class="stat-item"><div id="s-graded" style="font-size:18px; font-weight:700">0</div><div>Graded</div></div>
-    <div class="stat-item"><div id="s-score" style="font-size:18px; font-weight:700">—</div><div>Score</div></div>
-  </div>
-
-  <div id="qList"></div>
-</div>
-
-<script>
 const QUESTIONS = [
   {
     id: 1, 
     cat: "General", 
     q: "Can you tell us about yourself and your background?", 
     a: "I specialize in bridging the gap between field security and data automation. Currently a Security Assistant at ACF, I am trained in HEAT, UXO, and Trauma First Aid. I built a VBA Macro system that reduces 90-minute mapping tasks to 10 minutes and developed M-Tracker for real-time incident plotting.", 
-    keys: ["Certifications: HEAT, UXO, First Aid", "Automation: VBA Macros & KML files", "Intelligence: M-Tracker dashboard"]
+    keywords: ["heat", "uxo", "trauma", "acf", "vba", "macro", "kml", "m-tracker", "automation", "security assistant"]
   },
   {
     id: 30, 
     cat: "Personal", 
     q: "Describe a time you had to make a quick decision under pressure.", 
     a: "During a site assessment near the Yellow line in Khan Younis with my manager Sam, fire shooting started. Sam was terrified, so I ordered us to take shelter behind ruins, calmed her down, and guided her back to the vehicle while notifying the Area Manager. We reached safety through calm, structured movement.", 
-    keys: ["Immediate shelter-seeking", "Maintaining calm (Emotional Intelligence)", "Structured withdrawal & Reporting"]
+    keywords: ["yellow line", "khan younis", "shooting", "shelter", "ruins", "calm", "vehicle", "report"]
   },
   {
     id: 42, 
     cat: "Field", 
     q: "How do you prioritize tasks?", 
     a: "I use a Risk-Impact Matrix: Priority 1 is Life Safety (SOS alerts/evacuations). Priority 2 is Operational Readiness (Deconfliction/KML prep). Priority 3 is System Integrity (Master Tracker updates). If movements aren't secured, the mission doesn't move.", 
-    keys: ["Life Safety first", "Deconfliction before deployment", "Automation for routine tasks"]
-  },
-  {
-    id: 13,
-    cat: "Crisis",
-    q: "Staff wounded by a nearby strike? Immediate response?",
-    a: "1. Secure the scene (check for double-tap risk). 2. Self-Aid/Buddy-Aid (tourniquet/chest seal). 3. Broadcast ATMIST medical alert. 4. Evacuate to nearest stabilization point immediately—do not wait for an ambulance if the vehicle is mobile.",
-    keys: ["Scene safety (double-tap risk)", "ATMIST alert", "Immediate evacuation"]
+    keywords: ["risk-impact", "life safety", "deconfliction", "kml", "master tracker", "matrix"]
   }
-  // ... more questions can be added here ...
 ];
 
 let results = {};
+
+function checkAnswer(id) {
+  const q = QUESTIONS.find(x => x.id === id);
+  const userText = document.getElementById(`myanswer-${id}`).value.toLowerCase();
+  
+  if (userText.length < 10) {
+    alert("Please write a bit more to get a score!");
+    return;
+  }
+
+  // Auto-Score Logic: Count how many keywords appear in user text
+  let matchCount = 0;
+  q.keywords.forEach(word => {
+    if (userText.includes(word.toLowerCase())) matchCount++;
+  });
+
+  const matchPct = (matchCount / q.keywords.length) * 100;
+  let grade = "incorrect";
+  let feedback = "Try to use more technical terms from the HEAT training.";
+
+  if (matchPct >= 60) {
+    grade = "correct";
+    feedback = "Excellent! You used the key technical terminology.";
+  } else if (matchPct >= 25) {
+    grade = "partial";
+    feedback = "Good, but you missed some critical keywords (see model answer).";
+  }
+
+  results[id] = { result: grade, feedback: feedback };
+  updateStats();
+  renderList();
+  
+  // Show the answer box automatically after checking
+  document.getElementById(`ans-${id}`).style.display = 'block';
+}
 
 function renderList() {
   const list = document.getElementById('qList');
@@ -88,43 +69,22 @@ function renderList() {
     div.innerHTML = `
       <div style="font-weight:700; color:var(--red); font-size:12px; margin-bottom:5px">#${q.id} - ${q.cat}</div>
       <div style="font-weight:600; margin-bottom:10px">${q.q}</div>
-      <textarea class="practice-area" placeholder="Draft your answer..."></textarea>
+      <textarea class="practice-area" id="myanswer-${q.id}" placeholder="Type your answer here..." ${res?'disabled':''}></textarea>
+      
       <div style="display:flex; gap:10px">
-        <button class="btn btn-blue" onclick="toggle(${q.id})">${res ? 'View Model Ans' : 'Reveal & Grade'}</button>
-        ${res ? `<span style="font-weight:700; color:var(--green); margin-top:8px">${res.toUpperCase()}</span>` : ''}
+        ${res ? '' : `<button class="btn btn-primary" onclick="checkAnswer(${q.id})">🤖 Auto-Check Score</button>`}
+        <button class="btn btn-blue" onclick="toggle(${q.id})">View Model Ans</button>
+        ${res ? `<span class="score-badge ${res.result}" style="padding:5px 10px; border-radius:4px; font-weight:700; background:${res.result==='correct'?'#eafaf1':'#fdf0ef'}">${res.result.toUpperCase()}</span>` : ''}
       </div>
-      <div class="ans-box" id="ans-${q.id}">
-        <div style="background:#fff8e1; padding:10px; border-radius:5px; margin-bottom:10px">
-          <strong>Self-Grade:</strong> 
-          <button class="btn btn-green" onclick="grade(${q.id}, 'correct')">Correct</button>
-          <button class="btn" onclick="grade(${q.id}, 'partial')">Partial</button>
-          <button class="btn" onclick="grade(${q.id}, 'wrong')" style="color:var(--red)">Wrong</button>
-        </div>
+
+      <div class="ans-box" id="ans-${q.id}" style="${res ? 'display:block' : 'display:none'}">
+        ${res ? `<p style="color:var(--text2); font-style:italic; margin-bottom:10px">${res.feedback}</p>` : ''}
         <p><strong>Model Answer:</strong> ${q.a}</p>
-        <ul style="margin-top:10px"><strong>Key Points:</strong> ${q.keys.map(k=>`<li class="kp">${k}</li>`).join('')}</ul>
+        <p style="margin-top:10px; color:var(--blue)"><strong>Required Keywords:</strong> ${q.keywords.join(', ')}</p>
       </div>
     `;
     list.appendChild(div);
   });
 }
 
-function toggle(id) { document.getElementById('ans-'+id).classList.toggle('show'); }
-
-function grade(id, status) {
-  results[id] = status;
-  updateStats();
-  renderList();
-}
-
-function updateStats() {
-  const graded = Object.keys(results).length;
-  const correct = Object.values(results).filter(v => v === 'correct').length;
-  const score = graded > 0 ? Math.round((correct / graded) * 100) : 0;
-  document.getElementById('s-graded').textContent = graded;
-  document.getElementById('s-score').textContent = score + '%';
-}
-
-renderList();
-</script>
-</body>
-</html>
+// Keep your existing updateStats, toggle, and init functions...
