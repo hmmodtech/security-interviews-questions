@@ -1,0 +1,528 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#c0392b;--red-l:#fdf0ef;--red-d:#7b1e16;
+  --green:#1e6b3a;--green-l:#eafaf1;
+  --amber:#7d5a0a;--amber-l:#fef9ec;
+  --blue:#1a5276;--blue-l:#eaf2fb;
+  --r:10px;--rs:6px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:0}
+.top{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:14px}
+.logo{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:5px 10px;border-radius:var(--rs);letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
+.ttl{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.sv{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.sl{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.prog-wrap{margin-bottom:14px}
+.prog-lbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:5px}
+.prog-bar{height:5px;background:var(--color-border-tertiary);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--red);border-radius:3px;transition:width .4s}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:12px;padding:6px 14px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .15s}
+.tab.active{background:var(--red);color:#fff;border-color:var(--red)}
+.sec{display:none}.sec.active{display:block}
+.cat-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.cb{border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);font-size:11px;padding:4px 10px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all .15s}
+.cb.active{border-color:var(--red);color:var(--red);font-weight:500}
+.srch{width:100%;padding:9px 12px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--rs);background:var(--color-background-primary);color:var(--color-text-primary);font-family:inherit;margin-bottom:12px;outline:none}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px;margin-bottom:10px}
+.qmeta{display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap}
+.qcat{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em}
+.cat-general{background:var(--amber-l);color:var(--amber)}
+.cat-operations{background:var(--blue-l);color:var(--blue)}
+.cat-crisis{background:var(--red-l);color:var(--red-d)}
+.cat-access{background:var(--green-l);color:var(--green)}
+.cat-tools{background:#f5eef8;color:#4a235a}
+.cat-coordination{background:#e8f8f5;color:#0e6655}
+.cat-psea{background:#fdf2f8;color:#76448a}
+.cat-field{background:#fff8e1;color:#b45309}
+.qnum{font-size:11px;color:var(--color-text-secondary)}
+.badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;margin-left:auto}
+.badge.correct{background:var(--green-l);color:var(--green)}
+.badge.partial{background:var(--amber-l);color:var(--amber)}
+.badge.incorrect{background:var(--red-l);color:var(--red-d)}
+.qq{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.5;margin-bottom:12px}
+.albl{font-size:10px;font-weight:500;color:var(--blue);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em;margin-top:12px}
+textarea{width:100%;min-height:90px;padding:10px 12px;font-size:13px;font-family:inherit;color:var(--color-text-primary);background:var(--color-background-primary);border:1px solid var(--blue-l);border-radius:var(--rs);resize:vertical;outline:none;line-height:1.6;transition:border-color .15s}
+textarea:focus{border-color:var(--blue)}
+textarea:disabled{opacity:.6;cursor:not-allowed;background:var(--color-background-secondary)}
+.brow{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+button{cursor:pointer;font-family:inherit;font-size:12px;padding:6px 12px;border-radius:var(--rs);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);transition:all .15s}
+button:hover{background:var(--color-background-secondary)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-p:hover{background:var(--red-d);border-color:var(--red-d)}
+.btn-g{background:var(--green-l);color:var(--green);border-color:var(--green)}
+.btn-b{background:var(--blue-l);color:var(--blue);border-color:var(--blue)}
+.abox{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--rs);padding:14px;margin-top:12px;display:none}
+.abox.show{display:block}
+.alabel{font-size:10px;font-weight:500;color:var(--green);margin-bottom:8px;text-transform:uppercase;letter-spacing:.07em}
+.atext{font-size:13px;color:var(--color-text-primary);line-height:1.7}
+.kp{font-size:12px;color:var(--color-text-secondary);padding:3px 0 3px 14px;position:relative;line-height:1.5}
+.kp::before{content:'';position:absolute;left:4px;top:10px;width:4px;height:4px;border-radius:50%;background:var(--red)}
+.kplbl{font-size:10px;color:var(--color-text-secondary);margin:8px 0 4px;text-transform:uppercase;letter-spacing:.05em}
+.fb{border-radius:var(--rs);padding:12px 14px;margin-top:10px;display:none}
+.fb.show{display:block}
+.fb.correct{background:var(--green-l);border:0.5px solid var(--green)}
+.fb.partial{background:var(--amber-l);border:0.5px solid var(--amber)}
+.fb.incorrect{background:var(--red-l);border:0.5px solid var(--red-d)}
+.fbh{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.fb.correct .fbh{color:var(--green)}
+.fb.partial .fbh{color:var(--amber)}
+.fb.incorrect .fbh{color:var(--red-d)}
+.fbt{font-size:13px;line-height:1.6;color:var(--color-text-primary)}
+.spin-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-text-secondary);padding:8px 0}
+.spin{width:14px;height:14px;border:2px solid var(--color-border-secondary);border-top-color:var(--red);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+.score-panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:24px;margin-bottom:14px;display:none}
+.score-panel.show{display:block}
+.spttl{font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.spsub{font-size:12px;color:var(--color-text-secondary);margin-bottom:18px}
+.sp-big{font-size:52px;font-weight:500;line-height:1;margin-bottom:4px}
+.sp-big.great{color:var(--green)}
+.sp-big.ok{color:var(--amber)}
+.sp-big.low{color:var(--red)}
+.sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.sp-item{border-radius:var(--rs);padding:10px;text-align:center}
+.sp-item.correct{background:var(--green-l);border:0.5px solid var(--green)}
+.sp-item.partial{background:var(--amber-l);border:0.5px solid var(--amber)}
+.sp-item.incorrect{background:var(--red-l);border:0.5px solid var(--red-d)}
+.sp-n{font-size:26px;font-weight:500}
+.sp-item.correct .sp-n{color:var(--green)}
+.sp-item.partial .sp-n{color:var(--amber)}
+.sp-item.incorrect .sp-n{color:var(--red-d)}
+.sp-nl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.sp-bar{height:8px;background:var(--color-border-tertiary);border-radius:4px;overflow:hidden;display:flex;margin:12px 0}
+.sb-g{background:var(--green);height:100%}
+.sb-a{background:var(--amber);height:100%}
+.sb-r{background:var(--red);height:100%}
+.finish-wrap{text-align:center;padding:18px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-top:14px;display:none}
+.finish-wrap p{font-size:13px;color:var(--color-text-secondary);margin-bottom:10px}
+.flash-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:28px 22px;text-align:center;min-height:200px;display:flex;flex-direction:column;justify-content:center;cursor:pointer}
+.flash-q{font-size:15px;font-weight:500;color:var(--color-text-primary);line-height:1.55;margin-bottom:14px}
+.flash-hint{font-size:12px;color:var(--color-text-secondary)}
+.flash-a{display:none;text-align:left;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--color-border-tertiary)}
+.flash-a.show{display:block}
+.flash-a-txt{font-size:13px;color:var(--color-text-primary);line-height:1.7}
+.flash-nav{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.flash-brow{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.flash-meta{font-size:12px;color:var(--color-text-secondary);text-align:center;margin-bottom:12px}
+.gloss-grid{display:grid;gap:8px}
+.gc{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px}
+.gt{font-size:13px;font-weight:500;color:var(--red);margin-bottom:4px}
+.gd{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.no-res{text-align:center;padding:30px;color:var(--color-text-secondary);font-size:13px}
+</style>
+
+<h2 class="sr-only">IRC Humanitarian Access and Security Interview Quiz — AI-powered answer checking with score tracking</h2>
+
+<div class="top">
+  <div class="logo">IRC</div>
+  <div>
+    <div class="ttl">Humanitarian Access & Security — Interview Trainer</div>
+    <div class="sub">50 questions · AI answer checking · Live score</div>
+  </div>
+</div>
+
+<div class="score-panel" id="scorePanel">
+  <div class="spttl">Your test results</div>
+  <div class="spsub" id="scoreSub">Based on AI-checked answers</div>
+  <div class="sp-big" id="scoreBig">—</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:4px" id="scoreLabel">out of 100%</div>
+  <div class="sp-grid">
+    <div class="sp-item correct"><div class="sp-n" id="sc-c">0</div><div class="sp-nl">Correct</div></div>
+    <div class="sp-item partial"><div class="sp-n" id="sc-p">0</div><div class="sp-nl">Partial</div></div>
+    <div class="sp-item incorrect"><div class="sp-n" id="sc-i">0</div><div class="sp-nl">Incorrect</div></div>
+  </div>
+  <div class="sp-bar"><div class="sb-g" id="sbg" style="width:0%"></div><div class="sb-a" id="sba" style="width:0%"></div><div class="sb-r" id="sbr" style="width:0%"></div></div>
+  <div id="scoreBarLbl" style="font-size:11px;color:var(--color-text-secondary);margin-bottom:14px"></div>
+  <div class="brow">
+    <button class="btn-p" onclick="resetScores()">Reset all scores</button>
+    <button onclick="scrollToFirstWrong()">Review incorrect answers</button>
+    <button onclick="document.getElementById('scorePanel').classList.remove('show')">Close</button>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat"><div class="sv" id="s-total">50</div><div class="sl">Total</div></div>
+  <div class="stat"><div class="sv" id="s-checked">0</div><div class="sl">Checked</div></div>
+  <div class="stat"><div class="sv" id="s-correct">0</div><div class="sl">Correct</div></div>
+  <div class="stat"><div class="sv" id="s-pct">—</div><div class="sl">Score</div></div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-lbl" id="progLbl">0 of 50 answers submitted</div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('study',this)">Study & Practice</button>
+  <button class="tab" onclick="showTab('flash',this)">Flashcards</button>
+  <button class="tab" onclick="showTab('glossary',this)">Key Terms</button>
+</div>
+
+<div class="sec active" id="sec-study">
+  <input class="srch" type="text" placeholder="Search questions..." id="srch" oninput="filterQ()">
+  <div class="cat-row" id="catRow"></div>
+  <div id="qList"></div>
+  <div class="finish-wrap" id="finishWrap">
+    <p>Ready to see your overall score?</p>
+    <button class="btn-p" onclick="showFinalScore()" style="font-size:14px;padding:9px 20px">View my score</button>
+  </div>
+</div>
+
+<div class="sec" id="sec-flash">
+  <div class="flash-meta" id="flashMeta">Question 1 of 50</div>
+  <div class="flash-card" id="flashCard" onclick="revealFlash()">
+    <div class="qcat cat-general" id="flashCat" style="display:inline-block;margin-bottom:10px"></div>
+    <div class="flash-q" id="flashQ"></div>
+    <div class="flash-hint" id="flashHint">Tap to reveal answer</div>
+    <div class="flash-a" id="flashA"><div class="flash-a-txt" id="flashATxt"></div></div>
+  </div>
+  <div class="flash-brow" id="flashBrow" style="display:none">
+    <button class="btn-g" onclick="nextFlash()">Got it, next</button>
+    <button onclick="nextFlash()">Next anyway</button>
+  </div>
+  <div class="flash-nav">
+    <button onclick="prevFlash()">← Prev</button>
+    <button onclick="shuffleFlash()">Shuffle</button>
+    <button onclick="nextFlash()">Next →</button>
+  </div>
+</div>
+
+<div class="sec" id="sec-glossary">
+  <div class="gloss-grid" id="glossGrid"></div>
+</div>
+
+<script>
+const HEAT_CTX = `HEAT Course content for IRC Gaza Security & Access Assistant role:
+RISK ASSESSMENT: 5 steps: Context, Threat, Vulnerability, Likelihood & impact, Mitigation measures. Duty of care = legal/ethical obligation to assess and communicate risks. Mitigation = reduce likelihood or impact.
+SITUATIONAL AWARENESS: Absence of normal / presence of abnormal. Normal = women, children, shops open, unhurried. Cooper's Colors: White=unaware(bad), Yellow=relaxed alertness(target), Orange=specific alert, Red=act. Awareness killers: stress, fatigue, phone, headphones, normalisation.
+SHRER: Suspension (halt ops), Hibernation (shelter in place), Relocation (safer area), Evacuation (leave country), Recovery (return to ops).
+CHECKPOINTS: Before: know who controls them, one spokesperson, brief driver, docs ready. During: approach slowly, dim lights, interior light on, radio off, seatbelts on, windows mostly up, only spokesperson talks, calm polite cooperative. FLOWERS: Fuel, Lights, Oil, Water, Electrics, Rubber, Self(driver).
+CARJACKING: Hands up, comply, do NOT resist, give everything, contact org when safe.
+4 P'S: People first, Property second, Reputation third, Programme fourth. Never sacrifice people for assets.
+SAFE acronym: Send for help, Assess, Find your team, Examine and treat.
+6 W's incident report: Who, What, Where, When, What done, What help needed.
+FIRST AID: Big sick vs little sick (life/limb/sight threatening). AVPU scale. 5 vital signs: level of response, breathing, colour, temperature, capillary refill (<2 seconds). CPR: 30 compressions + 2 breaths, 5-6cm deep, 2 per second, stop after 20min no signs of life. ATMIST: Age, Time, Mechanism, Injuries, Signs, Treatment.
+SELF-AWARENESS: Emotional intelligence 5 components: self-awareness, self-regulation, motivation, empathy, social skills. Mission bully = pressures unsafe risks for program. You are responsible for your own security. No victim blaming.
+PACE: Primary, Alternative, Contingency, Emergency communication methods.
+UXO: Never touch, never approach to identify, never pick up. Back out same path. Report immediately.
+COVER vs CONCEALMENT: Cover stops bullets (concrete, engine block). Concealment only hides (wood, car doors). Always seek cover.
+HUMANITARIAN PRINCIPLES: Humanity, Neutrality, Impartiality, Independence.
+DECONFLICTION: Notify military of humanitarian locations via OCHA HNS.
+ACCEPTANCE MODEL: Community trust = safest security strategy. Three strategies: Acceptance, Protection, Deterrence.
+PSEA: Protection from Sexual Exploitation and Abuse. Broader = Safeguarding. PSEA is subset focused on sexual harm to beneficiaries by staff.`;
+
+const QS = [
+  {id:1,cat:"general",q:"Can you tell us about yourself and your background?",a:"Start with a professional summary linking your background to security and humanitarian work. Mention your certifications (HEAT, UXO, Trauma First Aid), current role, and specific achievements. Highlight how you use technology to enhance safety — automation tools, tracking systems, or dashboards you have built to improve operational response times.",keys:["Link experience directly to the role","Name specific certifications: HEAT, UXO, Trauma First Aid","Mention real achievements with measurable results"]},
+  {id:2,cat:"general",q:"Why do you want to work with IRC?",a:"Express genuine respect for IRC's humanitarian mission and commitment to vulnerable communities in complex emergencies like Gaza. Say you want to contribute your security, mapping, and coordination skills to help teams reach more people safely. Emphasize IRC's professionalism and focus on principled humanitarian action.",keys:["Show you know IRC's mission","Connect your motivation to the population served","Mention humanitarian principles"]},
+  {id:3,cat:"general",q:"Why do you want to leave your current organization and join IRC?",a:"Frame the move as professional growth, not dissatisfaction. Acknowledge what you gained from your current role, then explain that IRC's operational pace, field-driven approach, and centralized coordination model better match your strengths. Emphasize you are moving toward something, not away from something.",keys:["Be positive about your current employer","Show ambition and professional growth","Never criticize your current organization"]},
+  {id:4,cat:"general",q:"Why do you think you are suitable for this role?",a:"Emphasize your combination of field experience, technical skills, and calm under pressure. Highlight experience in mapping, route planning, movement tracking, and driver coordination. Mention that you are detail-oriented and committed to supporting humanitarian operations safely and efficiently.",keys:["Field experience + technical skills = unique combination","Calm under pressure","Specifically mention mapping and movement tracking"]},
+  {id:5,cat:"general",q:"What do you know about humanitarian principles?",a:"Four core principles: Humanity (protect life), Neutrality (do not take sides), Impartiality (aid based on need alone), and Independence (separate from political/military objectives). These principles reduce operational risk and build community trust.",keys:["Humanity — protect life","Neutrality — no sides","Impartiality — need alone","Independence — separate from political objectives"]},
+  {id:6,cat:"operations",q:"How do you track and monitor staff movements safely in high-risk areas?",a:"Use a movement planning system capturing departure time, routes, passengers, and driver contacts. Monitor check-ins for departures and arrivals using digital mapping tools. Maintain continuous communication with drivers and field teams. Flag overdue check-ins immediately and follow escalation procedures.",keys:["Pre-approved movement plans","Digital tracking tools (GPS, mapping apps)","Regular check-in schedule","Immediate escalation for missed check-ins"]},
+  {id:7,cat:"operations",q:"How would you plan a movement route considering security risks?",a:"Review latest security updates, high-risk zones, and access restrictions. Coordinate with program team. Select the safest route — not necessarily the fastest — and always prepare at least one alternative route. Balance staff safety with program delivery needs.",keys:["Consult latest security information first","Safest route, not fastest","Always have alternative routes ready","Coordinate with program team"]},
+  {id:8,cat:"operations",q:"If one of the cars does not check in on time, what steps would you take?",a:"First, contact the team leader. If no response, contact the driver directly. Simultaneously check with nearby teams or contacts. If communication cannot be established, escalate to your line manager and activate the incident response procedure. Priority is to confirm staff safety as quickly as possible.",keys:["Contact team leader first","Then contact driver directly","Check with nearby contacts","Escalate to line manager if no response"]},
+  {id:9,cat:"operations",q:"What would you do if a staff member insisted on going to a restricted or unsafe area?",a:"Explain the specific security risks using verified data. If the staff member still insists, escalate to the Head of Base or Security Manager — this is not yours alone to decide. Propose safer alternatives that still allow the program objective to be met.",keys:["Explain risks with evidence, not opinion","Escalate — don't handle it alone","Always offer safer alternatives","Duty of Care is the overriding principle"]},
+  {id:10,cat:"crisis",q:"Imagine there is an airstrike or sudden escalation while staff are on the move. How would you respond?",a:"Immediately contact all mobile teams and instruct them to move to the nearest pre-identified safe location or return to base. If neither is possible, instruct the team to hibernate (shelter in place) until a safe evacuation window is confirmed. Inform your line manager immediately and provide regular situation updates.",keys:["Immediate contact — do not wait","Safe location or return to base first","Hibernate if neither is possible","Brief line manager continuously","Document and update tracking after resolution"]},
+  {id:11,cat:"crisis",q:"If a sudden escalation occurs and you lose communication with a field team, what is your immediate protocol?",a:"Stay calm to maintain clear judgment. Check the master tracker for the team's last known coordinates. Reach out to pre-identified community focal points. Brief the Security Manager immediately. Activate the contingency plan — advise the team to hibernate or begin a coordinated evacuation once a safe window is confirmed.",keys:["Calm = clear judgment","Check last known location on tracker","Use community focal points","Activate contingency plan (SHRER)","Never make decisions alone — brief manager"]},
+  {id:12,cat:"crisis",q:"The Program Manager insists on a distribution today, but your security assessment shows the area is 'High Risk.' How do you handle this?",a:"Your role is to be a program enabler, not a 'no-man.' Explain the specific risks based on verified data. Offer mitigation alternatives: change distribution time, shift to a safer secondary site, or use a third-party partner. If the risk directly threatens staff lives, uphold the Duty of Care and recommend postponement.",keys:["You are a program enabler, not a blocker","Use data to explain — not opinion","Always offer alternatives first","Duty of Care is non-negotiable"]},
+  {id:13,cat:"crisis",q:"A staff member is wounded by a nearby strike while in a field location. What do you do?",a:"First, secure the scene — check for 'double tap' risk before approaching. Apply immediate life-saving measures using buddy-aid: tourniquet for massive hemorrhage, chest seal for torso wounds. Use the ATMIST format to broadcast a medical alert to the Security Focal Point. Move the casualty to the nearest stabilization point without delay.",keys:["Secure scene first — avoid double-tap","ATMIST broadcast to Security Focal Point","Evacuate to stabilization point without delay","4 P's: People first"]},
+  {id:14,cat:"crisis",q:"A peaceful distribution turns violent due to scarcity. What do you do?",a:"At the first sign of escalating tension — shouting, pushing, or weapon display — suspend the distribution. NGO staff must immediately retreat to a hardened space such as a locked room or vehicle. Do not attempt to protect supplies — assets are replaceable, lives are not. Report the security breach and reassess the location's viability.",keys:["Suspend distribution at first sign of tension","Retreat to hardened space immediately","Never use force to protect supplies","Assets = replaceable; lives = not"]},
+  {id:15,cat:"crisis",q:"What is the Golden Incident Response Framework you would follow during any security emergency?",a:"(1) Immediate life-saving actions. (2) Accountability — account for all staff. (3) Information verification — distinguish fact from rumor. (4) Notification chain — brief the Security Manager and leadership. (5) Incident stabilization. (6) Formal reporting within 24 hours. (7) Lessons learned review.",keys:["People first, always","Account for all staff early","Verify information before sharing","Notification chain must be clear and fast","Lessons learned prevents recurrence"]},
+  {id:16,cat:"operations",q:"How do you maintain effective communication with field teams and drivers?",a:"Focus on clear, concise, and consistent communication. Confirm all movement details before departure, maintain regular check-ins during movements, and ensure all messages are acknowledged. During high-stress situations, stay calm to prevent confusion. Use standardized communication protocols.",keys:["Confirm details before departure","Regular check-ins with acknowledgment","Stay calm — stress is contagious","Standardized protocols prevent errors"]},
+  {id:17,cat:"operations",q:"How do you handle urgent messages or critical alerts?",a:"Prioritize urgent messages immediately and verify the accuracy of the information before escalating — accuracy and speed are both essential. Escalate critical alerts to management and relevant teams without delay. Monitor the situation in real time and document all actions taken.",keys:["Immediate prioritization","Verify accuracy before escalating","Speed and accuracy both matter","Document every action taken"]},
+  {id:18,cat:"coordination",q:"How do you ensure smooth communication between Security, Programs, and Drivers?",a:"Establish clear processes and timelines. Program teams submit movement plans in advance; you review and confirm all details before execution. Maintain continuous communication with drivers and ensure they understand routes and security procedures. Share relevant security updates proactively.",keys:["Advance submission of movement plans","Review and confirm before execution","Proactive security updates to all teams","Coordination = safety + efficiency"]},
+  {id:19,cat:"coordination",q:"What would you include in a security incident report?",a:"For medical incidents, use ATMIST: Age, Time, Mechanism, Injuries, Signs, Treatment. For security incidents, use the 6W approach: What, When, Where, Who, What support needed, What actions taken. Include the incident classification and recommendations for follow-up.",keys:["Medical = ATMIST","Security = 6Ws","Include classification of incident type","Add recommendations for future mitigation"]},
+  {id:20,cat:"operations",q:"How would you respond when a movement is delayed without explanation?",a:"Immediately flag the delay and attempt to contact the driver. If no response, contact the team leader. Assess the situation and inform relevant supervisors. Suggest alternative routes or request the team hibernate in place. Follow the established missed check-in procedure and never assume a delay is routine.",keys:["Never assume a delay is benign","Contact driver first, then team leader","Inform supervisor immediately","Suggest alternatives — hibernate if needed"]},
+  {id:21,cat:"tools",q:"What experience do you have using mapping tools like QGIS?",a:"QGIS can be used to create spatial layers, export KML files, update maps daily, and analyze route data for security movement planning. Experience should include importing GPS data, plotting incidents on maps, and creating exportable layers for field teams.",keys:["Spatial layers and KML export","Daily map updates","Route analysis for security movements","Adaptable to any mapping platform"]},
+  {id:22,cat:"tools",q:"Can you explain how to generate and share a KML file?",a:"Select the required layers or routes in a mapping tool such as QGIS. Export them in KML format. Share the file via email, WhatsApp, or upload it to a shared platform so stakeholders can visualize routes and incidents on their own devices in real time.",keys:["Select relevant layers","Export as KML","Share via appropriate channel","Enables real-time visualization for field teams"]},
+  {id:23,cat:"tools",q:"What do you know about the ECP platform?",a:"ECP is used to notify and plan humanitarian movements in conflict zones. It is used to input movement requests, validate routes, monitor check-ins, and flag discrepancies. It is also used for deconfliction — ensuring military parties are aware of humanitarian vehicle movements.",keys:["Movement requests and validation","Real-time check-in monitoring","Discrepancy flagging","Deconfliction with military actors"]},
+  {id:24,cat:"tools",q:"How do you verify incidents reported via social media?",a:"Cross-check information using verified sources such as OCHA reports, trusted news agencies, and dedicated monitoring systems like M-Tracker, HNS feeds, or INSO updates. Do not update maps or share alerts based on unverified social media alone. Report only verified information upward.",keys:["Cross-check with OCHA, INSO, HNS","Use dedicated monitoring tools","Never act on unverified social media alone","Accuracy before speed in reporting"]},
+  {id:25,cat:"tools",q:"What tools do you use to update security maps daily?",a:"Tools such as QGIS, Google My Maps, and integrated tracking dashboards are used to update staff locations, vehicle movements, and security incidents in real time. Daily updates include new incident markers, route status changes, and zone classifications. Updated maps are then exported and shared with program teams.",keys:["QGIS and Google My Maps","Daily incident and route updates","Zone classification updates","Export and share with all relevant teams"]},
+  {id:26,cat:"tools",q:"What is your proficiency in Excel?",a:"Advanced proficiency including filters, pivot tables, complex formulas (XLOOKUP, VLOOKUP, INDEX-MATCH), conditional formatting, and VBA Macros. Excel macros can be used to automate movement planning, convert data into KML files, and generate security dashboards.",keys:["XLOOKUP, VLOOKUP, INDEX-MATCH","Pivot tables and conditional formatting","VBA Macros for automation","Automation reduces manual error and saves time"]},
+  {id:27,cat:"operations",q:"Describe your experience with fleet or transport operations.",a:"Experience coordinating vehicle schedules, tracking daily movements, maintaining movement logs, and communicating with drivers. This includes pre-departure vehicle checks (FLOWERS), in-movement check-ins, and post-arrival debriefs with drivers to capture security observations.",keys:["Vehicle scheduling and logs","Pre-departure checks (FLOWERS acronym)","In-movement check-ins","Post-arrival debrief for intel gathering"]},
+  {id:28,cat:"coordination",q:"How would you induct new staff on security awareness?",a:"Deliver a structured Security Arrival Briefing covering: current security context, key risks in the operating area, movement rules and SOPs, communication methods and check-in procedures, emergency contacts, and what to do if an incident occurs. Ensure all new staff sign acknowledgment.",keys:["Security Arrival Briefing for all new staff","Cover: context, risks, SOPs, comms, emergency contacts","Get written acknowledgment","Tailor to their role and movement areas"]},
+  {id:29,cat:"general",q:"How do you handle stress in emergencies?",a:"Stay calm and focus on following established procedures. Under stress, use structured steps — contact, assess, escalate — to maintain effective decision-making. Communicate clearly with your team and avoid transferring your stress to them. After the emergency, debrief and take care of your own wellbeing.",keys:["Follow procedures — structure prevents panic","Contact, assess, escalate sequence","Clear communication under pressure","Debrief and self-care afterward"]},
+  {id:30,cat:"general",q:"Describe a time you had to make a quick decision under pressure.",a:"Use a real example that demonstrates situational awareness, calm decision-making, and concern for team safety. Structure your answer: describe the situation, the threat, your immediate assessment, the action you took, and the outcome. End with what you learned.",keys:["Real example with clear structure","Show situational awareness","Demonstrate calm and decisive action","Reflect on what you learned"]},
+  {id:31,cat:"general",q:"What are your strengths and weaknesses?",a:"Strengths: attention to detail (critical for incident reports and tracking), staying calm under pressure, strong communication skills, and technical proficiency in mapping and data tools. Weakness: a tendency to focus heavily on detail, which can slow output — actively being addressed by improving the balance between thoroughness and speed.",keys:["Strengths must be directly relevant to the role","Weakness must be genuine but manageable","Show self-awareness and active improvement"]},
+  {id:32,cat:"general",q:"How do you stay motivated during repetitive tasks?",a:"Recognize that accuracy in repetitive tasks — like tracking check-ins or updating maps — directly protects staff lives. Maintain discipline by setting small goals, using automation to reduce routine burden, and regularly connecting the task to its mission impact.",keys:["Connect routine tasks to their life-saving purpose","Use automation to reduce cognitive fatigue","Set small goals for repetitive work"]},
+  {id:33,cat:"general",q:"How do you ensure data confidentiality?",a:"Limit access to authorized personnel only. Use secure communication systems and avoid sharing sensitive data through unencrypted channels. Follow organizational data protection policies strictly. Sensitive movement data, staff locations, and incident reports must be protected from unauthorized access.",keys:["Access control — authorized personnel only","Secure and encrypted channels","Follow org data protection policy","Movement data and locations are highly sensitive"]},
+  {id:34,cat:"general",q:"What would you do in your first 30 days at IRC?",a:"Review existing systems, movement procedures, and all current SOPs. Update or verify accuracy of tracking maps. Meet with key staff across Security, Programs, Logistics, and Field teams. Ensure all tracking and reporting tools are functional. Identify gaps and propose improvements within the first month.",keys:["Review systems and SOPs first","Meet all key stakeholders","Verify map and tracking accuracy","Identify gaps and propose improvements early"]},
+  {id:35,cat:"psea",q:"What do you know about PSEA?",a:"PSEA stands for Protection from Sexual Exploitation and Abuse. It refers to the policies and actions taken by humanitarian organizations to prevent and respond to any form of sexual exploitation or abuse by staff, volunteers, or partners — especially toward beneficiaries. It is important because it protects vulnerable people and maintains community trust.",keys:["Protection from Sexual Exploitation and Abuse","Applies to staff, volunteers, and partners","Protects beneficiaries","Mandatory reporting obligations"]},
+  {id:36,cat:"psea",q:"What is the difference between PSEA and Safeguarding?",a:"Safeguarding is the broader framework for protecting everyone (staff, volunteers, communities, children) from all forms of harm. PSEA is a specific subset focused exclusively on preventing and responding to sexual misconduct by aid workers directed at beneficiaries. Safeguarding = protecting everyone from all harm; PSEA = protecting beneficiaries from sexual harm by staff.",keys:["Safeguarding = broad protection for everyone","PSEA = specific subset focused on sexual harm to beneficiaries","Both require mandatory reporting"]},
+  {id:37,cat:"access",q:"What do you know about the Acceptance Model in humanitarian security?",a:"The Acceptance Model is one of the three main security management strategies (alongside Protection and Deterrence). It is built on the principle that the safest security comes from community trust and goodwill. In Gaza, this means maintaining neutrality, transparent communication, community engagement, and consistent principled behavior.",keys:["Three strategies: Acceptance, Protection, Deterrence","Acceptance = best long-term security","Built on neutrality, trust, and principled behavior","Community engagement is the practical mechanism"]},
+  {id:38,cat:"access",q:"How do you maintain good acceptance with the community?",a:"Acceptance is built through trust, transparency, and respectful engagement. Ensure all staff conduct is aligned with humanitarian principles — especially neutrality and impartiality. Respond professionally to community concerns and feedback. Engage community leaders proactively. Acceptance must be continuously maintained.",keys:["Principled conduct by all staff at all times","Respond to community concerns promptly","Engage community leaders proactively","Acceptance is maintained, not achieved once"]},
+  {id:39,cat:"access",q:"What is Deconfliction in the humanitarian context?",a:"Deconfliction is the process of notifying military parties about the locations of humanitarian staff, facilities, vehicles, and planned movements — so they can take steps to avoid targeting them. In Gaza, this is typically done through OCHA's Humanitarian Notification System (HNS). It reduces the risk of humanitarian actors being caught in military operations.",keys:["Notifying military of humanitarian locations and movements","Done via OCHA HNS or similar systems","Reduces risk of being caught in military operations","Critical in active-conflict environments like Gaza"]},
+  {id:40,cat:"access",q:"What does SHRER stand for and when is it used?",a:"SHRER stands for: Suspension (halting operations), Hibernation (shelter in place), Relocation (move to safer area), Evacuation (leave the area entirely), and Recovery (return to normal operations). These are the five escalation levels for managing staff safety during serious security deterioration.",keys:["Suspension — halt operations","Hibernation — shelter in place","Relocation — safer area nearby","Evacuation — leave the area","Recovery — return to operations"]},
+  {id:41,cat:"access",q:"What is PACE planning?",a:"PACE stands for Primary, Alternative, Contingency, and Emergency. It is a communication planning framework that ensures teams always have a backup method to communicate if the primary channel fails. For example: Primary = mobile phone, Alternative = WhatsApp, Contingency = VHF radio, Emergency = satellite phone.",keys:["Primary, Alternative, Contingency, Emergency","Never rely on a single communication channel","Each level must be tested and known by all staff"]},
+  {id:42,cat:"field",q:"What are the 4 P's of incident response priority?",a:"The 4 P's establish the priority order during any incident: (1) People — human health and safety first always, (2) Property — minimize asset loss once people are safe, (3) Reputation — limit organizational reputational damage, (4) Programme — continue operations where possible. Never sacrifice people to save assets.",keys:["1. People (always first)","2. Property","3. Reputation","4. Programme","Never reverse this order"]},
+  {id:43,cat:"field",q:"Explain the SAFE acronym used during an incident.",a:"SAFE is the immediate response framework: S — Send for help (contact someone outside the situation immediately), A — Assess what happened (distinguish facts from assumptions), F — Find your team (locate all staff if safe to do so), E — Examine and treat (triage and provide medical assistance). This prevents panic and ensures a structured first response.",keys:["Send for help first","Assess — facts not assumptions","Find your team","Examine and treat — triage"]},
+  {id:44,cat:"field",q:"What are the 6 W's for an immediate incident report?",a:"Who was involved, What happened, Where it occurred, When it occurred, What actions have already been taken, and What help or assistance is still needed. This structured format ensures the receiver has everything needed to make rapid decisions.",keys:["Who, What, Where, When","What was done already","What help is needed","Structure prevents information gaps"]},
+  {id:45,cat:"field",q:"Explain the FLOWERS acronym for vehicle pre-departure checks.",a:"FLOWERS is a vehicle readiness checklist: F — Fuel (never below half tank), L — Lights (all functional), O — Oil (checked), W — Water (coolant and windscreen), E — Electrics (battery, wipers), R — Rubber (tires and wipers), S — Self (driver fitness — rested, not impaired, briefed on route and risks). Mandatory before every movement.",keys:["Fuel, Lights, Oil, Water, Electrics, Rubber, Self","Never skip — every movement requires a check","Driver fitness ('S') is often overlooked but critical"]},
+  {id:46,cat:"field",q:"What is the difference between Cover and Concealment?",a:"Cover physically stops bullets and protects you from projectiles — examples include concrete walls, engine blocks, and thick stone structures. Concealment only hides you from view but offers no ballistic protection — examples include wooden fences, thin interior walls, and car doors. In a shooting incident, always seek cover, not just concealment.",keys:["Cover = stops bullets (concrete, engine block)","Concealment = only hides you (wooden fence, car door)","Always seek cover in a shooting incident","Car doors do NOT provide cover"]},
+  {id:47,cat:"field",q:"What are the three 'Never' rules for UXO (Unexploded Ordnance) safety?",a:"(1) Never touch or disturb the object. (2) Never approach or try to identify the object more closely. (3) Never pick it up as a souvenir or out of curiosity. If you find a suspected UXO: mark the area, back away using the exact same path you came from, and report it immediately to the security officer.",keys:["Never touch","Never approach to identify","Never pick up","Back out on the same path you entered","Report immediately"]},
+  {id:48,cat:"general",q:"Cooper's Color Code — how do you apply it in the field?",a:"Cooper's Color Code: White (unaware/relaxed — dangerous in the field), Yellow (relaxed alertness — the optimal state for humanitarian workers), Orange (specific alert — something feels wrong), Red (action mode — responding to a direct threat). The goal is to always maintain Yellow: alert and aware, but not stressed.",keys:["White = unaware (avoid this)","Yellow = relaxed alertness (target state)","Orange = specific alert (something is wrong)","Red = immediate action required","Learn what is 'normal' to detect what is abnormal"]},
+  {id:49,cat:"general",q:"What are the 5 Ways to Wellbeing and why do they matter in humanitarian work?",a:"The 5 Ways to Wellbeing are: Connect (maintain relationships), Be Active (physical activity reduces stress), Take Notice (mindfulness), Keep Learning (professional development), and Give (helping others reinforces meaning). In Gaza's high-stress environment, personal wellbeing directly affects professional performance. Burned-out staff make more errors.",keys:["Connect, Be Active, Take Notice, Keep Learning, Give","Wellbeing = professional performance in crisis contexts","Burnout leads to poor decisions and more risk"]},
+  {id:50,cat:"general",q:"Who is ultimately responsible for your own security in the field?",a:"You are. While your organization provides policies, systems, training, and support, ultimately you are the only person who truly understands your own risk tolerance, physical condition, and situational awareness in real time. The organization has a duty of care, but the individual is the last line of their own defense.",keys:["You are responsible for your own security","The organization provides the framework","SOPs and training are your tools — use them","Duty of Care flows both ways"]}
+];
+
+const GLOSSARY = [
+  {term:"HEAT",def:"Hostile Environment Awareness Training — prepares humanitarian staff to work safely in conflict zones."},
+  {term:"SHRER",def:"Suspension, Hibernation, Relocation, Evacuation, Recovery — five escalation levels for managing staff safety."},
+  {term:"PACE",def:"Primary, Alternative, Contingency, Emergency — communication planning framework."},
+  {term:"ATMIST",def:"Age, Time, Mechanism, Injuries, Signs, Treatment — structured medical casualty report format."},
+  {term:"6Ws",def:"Who, What, Where, When, What was done, What is needed — immediate security incident report format."},
+  {term:"FLOWERS",def:"Fuel, Lights, Oil, Water, Electrics, Rubber, Self — vehicle pre-departure safety checklist."},
+  {term:"SAFE",def:"Send for help, Assess, Find your team, Examine/treat — immediate incident response framework."},
+  {term:"4 P's",def:"People, Property, Reputation, Programme — priority order during any security incident. People always first."},
+  {term:"PSEA",def:"Protection from Sexual Exploitation and Abuse — prevents/responds to sexual misconduct by humanitarian staff toward beneficiaries."},
+  {term:"Deconfliction",def:"Notifying military parties about humanitarian staff, vehicles, and facility locations to reduce targeting risk. Done via OCHA HNS."},
+  {term:"HNS",def:"Humanitarian Notification System — OCHA's platform used for deconfliction in active conflict zones like Gaza."},
+  {term:"Duty of Care",def:"The legal and ethical obligation of an organization to take reasonable steps to protect staff safety and wellbeing."},
+  {term:"Acceptance Model",def:"Security strategy based on the principle that community trust is the most sustainable form of protection for humanitarian workers."},
+  {term:"UXO / ERW",def:"Unexploded Ordnance / Explosive Remnants of War. Never touch, approach, or pick up suspected UXO."},
+  {term:"Cooper's Color Code",def:"Situational awareness levels: White (unaware), Yellow (relaxed alertness — target state), Orange (specific alert), Red (action required)."},
+  {term:"Cover vs Concealment",def:"Cover physically stops bullets (concrete, engine blocks). Concealment only hides you (wooden fences, car doors). Always seek cover."},
+  {term:"AVPU",def:"Alert, Voice, Pain, Unresponsive — rapid scale used to assess a casualty's level of consciousness."},
+  {term:"INSO",def:"International NGO Safety Organisation — provides security information, analysis, and support to NGOs in high-risk environments."},
+  {term:"SOP",def:"Standard Operating Procedure — documented rules governing specific activities to ensure consistent and safe practice."},
+  {term:"KML File",def:"Keyhole Markup Language — geographic data format used to display points, routes, and areas on mapping tools like Google Earth."}
+];
+
+const CATS = {general:"General & Motivation",operations:"Operations & Tracking",crisis:"Crisis & Incident Response",coordination:"Coordination & Comms",access:"Humanitarian Access",tools:"Tools & Technology",psea:"PSEA & Safeguarding",field:"Field Protocols"};
+
+let results = {};
+let activeFilter = "all";
+let flashIdx = 0;
+let flashOrder = [...Array(QS.length).keys()];
+let flashRevealed = false;
+let checking = {};
+
+function updateStats(){
+  const checked = Object.keys(results).length;
+  const correct = Object.values(results).filter(r=>r.result==='correct').length;
+  const partial = Object.values(results).filter(r=>r.result==='partial').length;
+  document.getElementById('s-checked').textContent = checked;
+  document.getElementById('s-correct').textContent = correct;
+  const score = checked > 0 ? Math.round((correct + partial*0.5) / checked * 100) : null;
+  document.getElementById('s-pct').textContent = score !== null ? score+'%' : '—';
+  const pct = checked / QS.length * 100;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progLbl').textContent = checked+' of '+QS.length+' answers submitted';
+  document.getElementById('finishWrap').style.display = checked > 0 ? 'block' : 'none';
+}
+
+function buildCatFilters(){
+  const f = document.getElementById('catRow');
+  f.innerHTML = '<button class="cb active" onclick="setFilter(\'all\',this)">All (50)</button>';
+  const counts = {};
+  QS.forEach(q=>{ counts[q.cat]=(counts[q.cat]||0)+1; });
+  Object.keys(CATS).forEach(k=>{
+    if(counts[k]){
+      const b = document.createElement('button');
+      b.className='cb';
+      b.textContent=CATS[k]+' ('+counts[k]+')';
+      b.onclick=function(){setFilter(k,this);};
+      f.appendChild(b);
+    }
+  });
+}
+
+function setFilter(cat, btn){
+  activeFilter=cat;
+  document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterQ();
+}
+
+function filterQ(){
+  const search = document.getElementById('srch').value.toLowerCase();
+  const list = document.getElementById('qList');
+  list.innerHTML='';
+  let shown=0;
+  QS.forEach(q=>{
+    const catMatch = activeFilter==='all'||q.cat===activeFilter;
+    const textMatch = !search||q.q.toLowerCase().includes(search)||q.a.toLowerCase().includes(search);
+    if(catMatch&&textMatch){renderCard(q,list);shown++;}
+  });
+  if(shown===0) list.innerHTML='<div class="no-res">No questions match your search.</div>';
+}
+
+function renderCard(q, container){
+  const res=results[q.id];
+  const div=document.createElement('div');
+  div.className='card';
+  div.id='card-'+q.id;
+  const fbHtml = res ? `<div class="fb ${res.result} show" id="fb-${q.id}"><div class="fbh">${res.result==='correct'?'Correct':res.result==='partial'?'Partially correct':'Needs improvement'}</div><div class="fbt">${res.feedback}</div></div>` : `<div class="fb" id="fb-${q.id}"></div>`;
+  const spinHtml = `<div class="spin-wrap" id="spin-${q.id}" style="display:none"><div class="spin"></div><span>Checking your answer...</span></div>`;
+  div.innerHTML = `
+    <div class="qmeta">
+      <span class="qcat cat-${q.cat}">${CATS[q.cat]}</span>
+      <span class="qnum">#${q.id}</span>
+      ${res?`<span class="badge ${res.result}">${res.result==='correct'?'Correct':res.result==='partial'?'Partial':'Incorrect'}</span>`:''}
+    </div>
+    <div class="qq">${q.q}</div>
+    <div class="albl">Your answer</div>
+    <textarea id="ta-${q.id}" placeholder="Type your answer here, then click Check my answer for AI feedback..." ${res?'disabled':''}>${res?'':''}
+    </textarea>
+    ${spinHtml}
+    ${fbHtml}
+    <div class="brow" id="brow-${q.id}">
+      ${res?
+        `<button class="btn-b" onclick="toggleAns(${q.id})">Show model answer</button><button onclick="retry(${q.id})">Try again</button>`:
+        `<button class="btn-p" id="chk-${q.id}" onclick="checkAnswer(${q.id})">Check my answer</button><button class="btn-b" onclick="toggleAns(${q.id})">Show model answer</button>`
+      }
+    </div>
+    <div class="abox" id="ans-${q.id}">
+      <div class="alabel">Model answer</div>
+      <div class="atext">${q.a}</div>
+      ${q.keys?`<div class="kplbl">Key points to include</div>${q.keys.map(k=>`<div class="kp">${k}</div>`).join('')}`:''}
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function retry(id){
+  delete results[id];
+  filterQ();
+  setTimeout(()=>{const c=document.getElementById('card-'+id);if(c)c.scrollIntoView({behavior:'smooth',block:'center'});},100);
+  updateStats();
+}
+
+async function checkAnswer(id){
+  if(checking[id]) return;
+  const q=QS.find(x=>x.id===id);
+  const ta=document.getElementById('ta-'+id);
+  const userAns=(ta.value||'').trim();
+  if(!userAns||userAns.length<8){
+    ta.style.borderColor='var(--red)';
+    setTimeout(()=>{ta.style.borderColor='';},2000);
+    return;
+  }
+  checking[id]=true;
+  const btn=document.getElementById('chk-'+id);
+  if(btn){btn.disabled=true;btn.textContent='Checking...';}
+  document.getElementById('spin-'+id).style.display='flex';
+
+  try{
+    const resp = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:600,
+        system:`You are an expert evaluator for HEAT (Hostile Environment Awareness Training) interview questions for IRC (International Rescue Committee). Use this knowledge base:\n${HEAT_CTX}\n\nModel answer: ${q.a}\nKey points: ${q.keys?q.keys.join(', '):''}\n\nEvaluate the user's answer. Respond ONLY with valid JSON, no markdown:\n{"result":"correct"|"partial"|"incorrect","feedback":"2-3 sentence feedback: what was right, what was missing, what to improve."}\n\nScoring: correct=covers main concepts and 2+ key points; partial=some correct elements but misses important points; incorrect=wrong/too vague/missing all key concepts.`,
+        messages:[{role:"user",content:`Question: ${q.q}\n\nUser answer: ${userAns}`}]
+      })
+    });
+    const data=await resp.json();
+    const txt=data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(txt);
+    results[id]={result:parsed.result,feedback:parsed.feedback};
+    checking[id]=false;
+    updateStats();
+    filterQ();
+    setTimeout(()=>{const c=document.getElementById('card-'+id);if(c)c.scrollIntoView({behavior:'smooth',block:'center'});},100);
+  }catch(e){
+    checking[id]=false;
+    document.getElementById('spin-'+id).style.display='none';
+    if(btn){btn.disabled=false;btn.textContent='Check my answer';}
+    const fb=document.getElementById('fb-'+id);
+    fb.className='fb incorrect show';
+    fb.innerHTML='<div class="fbh">Error</div><div class="fbt">Could not check your answer. Please try again.</div>';
+  }
+}
+
+function toggleAns(id){document.getElementById('ans-'+id).classList.toggle('show');}
+
+function showFinalScore(){
+  const panel=document.getElementById('scorePanel');
+  const checked=Object.keys(results).length;
+  const correct=Object.values(results).filter(r=>r.result==='correct').length;
+  const partial=Object.values(results).filter(r=>r.result==='partial').length;
+  const incorrect=Object.values(results).filter(r=>r.result==='incorrect').length;
+  const scoreVal=checked>0?Math.round((correct+partial*0.5)/checked*100):0;
+  const bigEl=document.getElementById('scoreBig');
+  bigEl.textContent=scoreVal+'%';
+  bigEl.className='sp-big '+(scoreVal>=70?'great':scoreVal>=40?'ok':'low');
+  document.getElementById('scoreLabel').textContent='Score based on '+checked+' answered question'+(checked!==1?'s':'');
+  document.getElementById('scoreSub').textContent=checked<QS.length?(QS.length-checked)+' questions not yet answered':'All 50 questions answered';
+  document.getElementById('sc-c').textContent=correct;
+  document.getElementById('sc-p').textContent=partial;
+  document.getElementById('sc-i').textContent=incorrect;
+  const pct=n=>checked>0?(n/checked*100).toFixed(1)+'%':'0%';
+  document.getElementById('sbg').style.width=pct(correct);
+  document.getElementById('sba').style.width=pct(partial);
+  document.getElementById('sbr').style.width=pct(incorrect);
+  document.getElementById('scoreBarLbl').textContent='Correct: '+pct(correct)+' · Partial: '+pct(partial)+' · Incorrect: '+pct(incorrect);
+  panel.classList.add('show');
+  panel.scrollIntoView({behavior:'smooth'});
+}
+
+function resetScores(){
+  if(!confirm('Reset all scores and answers?')) return;
+  results={};updateStats();filterQ();
+  document.getElementById('scorePanel').classList.remove('show');
+}
+
+function scrollToFirstWrong(){
+  document.getElementById('scorePanel').classList.remove('show');
+  const fw=QS.find(q=>results[q.id]&&results[q.id].result==='incorrect');
+  if(fw){
+    activeFilter='all';
+    document.querySelectorAll('.cb').forEach(b=>{b.classList.remove('active');if(b.textContent.startsWith('All'))b.classList.add('active');});
+    filterQ();
+    setTimeout(()=>{const c=document.getElementById('card-'+fw.id);if(c)c.scrollIntoView({behavior:'smooth',block:'center'});},200);
+  }
+}
+
+function buildFlash(){renderFlashCard();}
+function renderFlashCard(){
+  const q=QS[flashOrder[flashIdx]];
+  flashRevealed=false;
+  document.getElementById('flashMeta').textContent='Question '+(flashIdx+1)+' of '+QS.length;
+  document.getElementById('flashCat').textContent=CATS[q.cat];
+  document.getElementById('flashCat').className='qcat cat-'+q.cat;
+  document.getElementById('flashQ').textContent=q.q;
+  document.getElementById('flashHint').style.display='';
+  document.getElementById('flashA').classList.remove('show');
+  document.getElementById('flashATxt').innerHTML=q.a+(q.keys?'<br><br><strong>Key points:</strong><ul>'+q.keys.map(k=>'<li>'+k+'</li>').join('')+'</ul>':'');
+  document.getElementById('flashBrow').style.display='none';
+}
+function revealFlash(){
+  if(flashRevealed)return;
+  flashRevealed=true;
+  document.getElementById('flashA').classList.add('show');
+  document.getElementById('flashHint').style.display='none';
+  document.getElementById('flashBrow').style.display='flex';
+}
+function nextFlash(){flashIdx=(flashIdx+1)%QS.length;renderFlashCard();}
+function prevFlash(){flashIdx=(flashIdx-1+QS.length)%QS.length;renderFlashCard();}
+function shuffleFlash(){
+  for(let i=flashOrder.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[flashOrder[i],flashOrder[j]]=[flashOrder[j],flashOrder[i]];}
+  flashIdx=0;renderFlashCard();
+}
+
+function buildGlossary(){
+  const grid=document.getElementById('glossGrid');
+  GLOSSARY.forEach(g=>{
+    const d=document.createElement('div');d.className='gc';
+    d.innerHTML=`<div class="gt">${g.term}</div><div class="gd">${g.def}</div>`;
+    grid.appendChild(d);
+  });
+}
+
+function showTab(name,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+buildCatFilters();filterQ();buildFlash();buildGlossary();updateStats();
+</script>
