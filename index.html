@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IRC Security Trainer — Ahmed Abu Jami</title>
     <style>
-        /* Modernized Styles for Khan Younis Environment */
         *{box-sizing:border-box; margin:0; padding:0}
         :root{
             --bg:#ffffff; --bg-alt:#f5f5f3; --text:#1a1a1a; 
@@ -15,73 +14,87 @@
         body{font-family:-apple-system, sans-serif; background:#eeede9; padding:20px; color:var(--text)}
         .app{max-width:850px; margin:0 auto}
         .header-card{background:var(--bg); padding:25px; border-radius:var(--radius); border:1px solid var(--border); margin-bottom:20px}
-        .q-card{background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:15px; transition:0.2s}
-        .q-card:hover{box-shadow:0 4px 15px rgba(0,0,0,0.05)}
+        .q-card{background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:15px}
         .stats-grid{display:flex; gap:15px; margin-bottom:20px}
         .stat-box{background:var(--bg); flex:1; padding:15px; border-radius:var(--radius); text-align:center; border:1px solid var(--border)}
         .btn{cursor:pointer; padding:10px 20px; border-radius:8px; border:1px solid var(--border); font-weight:600; font-size:13px; transition:0.2s}
         .btn-check{background:var(--red); color:white; border-color:var(--red)}
         .btn-view{background:var(--blue); color:white; border-color:var(--blue); margin-left:10px}
-        .practice-input{width:100%; min-height:120px; padding:15px; margin:15px 0; border:1.5px solid #d1d5db; border-radius:8px; font-family:inherit; font-size:14px; resize:vertical}
-        .practice-input:focus{border-color:var(--blue); outline:none}
-        .ans-box{display:none; background:var(--bg-alt); padding:20px; border-radius:8px; margin-top:15px; border-left:5px solid var(--green)}
-        .badge{font-size:11px; font-weight:800; padding:4px 10px; border-radius:4px; text-transform:uppercase; margin-left:10px}
+        .practice-input{width:100%; min-height:100px; padding:12px; margin:10px 0; border:1.5px solid #d1d5db; border-radius:8px; font-family:inherit}
+        .ans-box{display:none; background:var(--bg-alt); padding:15px; border-radius:8px; margin-top:10px; border-left:5px solid var(--green)}
+        .badge{font-size:11px; font-weight:800; padding:4px 8px; border-radius:4px; text-transform:uppercase; margin-left:10px}
         .correct{background:#eafaf1; color:var(--green)}
         .partial{background:#fef9ec; color:#7d5a0a}
         .incorrect{background:#fdf0ef; color:var(--red)}
-        .keyword-chip{display:inline-block; font-size:12px; background:#e2e8f0; padding:3px 8px; border-radius:4px; margin:2px}
+        .chip{display:inline-block; font-size:11px; background:#e2e8f0; padding:2px 6px; border-radius:4px; margin:2px}
     </style>
 </head>
 <body>
 
 <div class="app">
     <div class="header-card">
-        <h1 style="font-size:22px">IRC Security & Access Trainer</h1>
-        <p style="color:#666; font-size:14px; margin-top:5px">Personalized for Ahmed Abu Jami | ACF Gaza Experience</p>
+        <h1>IRC Security & Access Trainer</h1>
+        <p style="color:#666; font-size:14px">50 Questions | Auto-Grade | Personalized for Ahmed Abu Jami</p>
     </div>
-
     <div class="stats-grid">
         <div class="stat-box"><div id="s-count" style="font-size:24px; font-weight:700">0</div><div style="font-size:12px; color:#666">Answered</div></div>
-        <div class="stat-box"><div id="s-score" style="font-size:24px; font-weight:700">—</div><div style="font-size:12px; color:#666">Avg Score</div></div>
+        <div class="stat-box"><div id="s-score" style="font-size:24px; font-weight:700">—</div><div style="font-size:12px; color:#666">Score</div></div>
     </div>
-
     <div id="qList"></div>
 </div>
 
 <script>
-/* 
-   DATA SOURCE:[cite: 2] - "HEAT IRC interview.docx" 
-   Personal Stories: Ahmed's specific ACF experience & Sam (Khan Younis) incident.
-*/
 const QUESTIONS = [
-    {
-        id: 1,
-        cat: "General",
-        q: "Can you tell us about yourself and your background?",
-        a: "I am Ahmed Abu Jami, specializing in field security and data automation. At ACF, I reduced manual mapping from 90 mins to 10 mins using VBA Macros/KML. I also built M-Tracker for real-time incident dashboards.",
-        keywords: ["acf", "vba", "macro", "kml", "m-tracker", "automation", "mapping", "safety"]
-    },
-    {
-        id: 2,
-        cat: "Personal",
-        q: "Describe a time you had to make a quick decision under pressure.",
-        a: "During an assessment near the Yellow Line in Khan Younis with Sam, shooting started. I ordered shelter behind ruins, calmed Sam down, and guided us back to the vehicle while notifying the Area Manager.",
-        keywords: ["yellow line", "khan younis", "shooting", "shelter", "ruins", "calm", "vehicle", "notifying"]
-  },
-    {
-        id: 3,
-        cat: "Field",
-        q: "How do you prioritize tasks?",
-        a: "Priority 1: Life-Safety (SOS). Priority 2: Operational Readiness (HNS/KML). Priority 3: System Integrity (Tracker updates). Priority 4: Admin.",
-        keywords: ["life-safety", "deconfliction", "hns", "kml", "matrix", "prioritize"]
-    },
-    {
-        id: 4,
-        cat: "Crisis",
-        q: "If a team loses communication during escalation, what is your protocol?",
-        a: "Stay calm. Check last known coordinates on Master Tracker. Reach community focal points. Brief Manager. Activate SHRER protocols (Hibernate/Evacuate).",
-        keywords: ["calm", "master tracker", "coordinates", "focal points", "shrer", "hibernate"]
-    }
+    { id: 1, cat: "General", q: "Can you tell us about yourself and your background?", a: "I specialize in bridging field security with automation. At ACF, I built VBA Macros to convert movement data to KML and created M-Tracker for incident feeds.", keywords: ["acf", "vba", "macro", "kml", "automation", "m-tracker", "safety"] },
+    { id: 2, cat: "General", q: "Why do you want to work with IRC?", a: "I respect IRC's mission in Gaza. I want to contribute my mapping and coordination skills to ensure programs reach vulnerable people safely.", keywords: ["mission", "gaza", "coordination", "safe", "access"] },
+    { id: 3, cat: "General", q: "Why leave ACF for IRC?", a: "I am seeking professional growth in a fast-paced, field-driven role where I can use my automation and real-time monitoring strengths more centrally.", keywords: ["growth", "field-driven", "monitoring", "impact"] },
+    { id: 4, cat: "General", q: "Why are you suitable for this role?", a: "I combine field experience with technical skills in mapping, route planning, and movement tracking, remaining calm under high pressure.", keywords: ["mapping", "route", "tracking", "calm", "suitable"] },
+    { id: 5, cat: "General", q: "What are the humanitarian principles?", a: "Humanity, Neutrality, Impartiality, and Independence. These build community trust and reduce risk.", keywords: ["humanity", "neutrality", "impartiality", "independence"] },
+    { id: 6, cat: "Operations", q: "How do you track staff movements in high-risk areas?", a: "Pre-approved movement plans, digital GPS tracking, regular check-in schedules, and immediate escalation for missed check-ins.", keywords: ["movement plan", "gps", "check-in", "escalation"] },
+    { id: 7, cat: "Operations", q: "How would you plan a movement route?", a: "Review latest security updates, select the safest (not fastest) route, and prepare alternative routes.", keywords: ["safest", "alternative", "updates", "plan"] },
+    { id: 8, cat: "Operations", q: "Steps if a car misses a check-in?", a: "Contact team leader, then driver. Check nearby contacts. Escalate to line manager and activate incident procedures.", keywords: ["contact", "driver", "escalate", "safety"] },
+    { id: 9, cat: "Operations", q: "Staff insists on restricted area?", a: "Explain risks with data. Escalate to Security Manager. Propose safer alternatives.", keywords: ["explain", "data", "escalate", "alternatives"] },
+    { id: 10, cat: "Crisis", q: "Response to airstrike during movement?", a: "Immediate contact. Order movement to nearest safe location or base. Hibernate if neither is possible. Update manager.", keywords: ["safe location", "hibernate", "contact", "inform"] },
+    { id: 11, cat: "Crisis", q: "Lost comms with team during escalation?", a: "Stay calm. Check Master Tracker for last coordinates. Reach community focal points. Brief manager.", keywords: ["calm", "tracker", "coordinates", "focal points"] },
+    { id: 12, cat: "Crisis", q: "PM insists on distribution in high-risk area?", a: "Act as enabler. Offer mitigations (time/site change). Uphold Duty of Care if risk is critical.", keywords: ["enabler", "mitigation", "duty of care", "risk"] },
+    { id: 13, cat: "Crisis", q: "Staff wounded by strike?", a: "Secure scene (double-tap risk). Buddy-aid (tourniquet). ATMIST alert. Evacuate to stabilization point.", keywords: ["double-tap", "tourniquet", "atmist", "evacuate"] },
+    { id: 14, cat: "Crisis", q: "Distribution turns violent?", a: "Suspend distribution immediately. Retreat to hardened space. Assets are replaceable; lives are not.", keywords: ["suspend", "retreat", "replaceable", "lives"] },
+    { id: 15, cat: "Crisis", q: "Golden Incident Response Framework?", a: "Life-saving, Accountability, Verification, Notification, Stabilization, Reporting, Lessons Learned.", keywords: ["life-saving", "accountability", "verification", "notification"] },
+    { id: 16, cat: "Operations", q: "Effective communication with field teams?", a: "Clear, concise, consistent. Confirm details before departure. Standardized protocols.", keywords: ["concise", "confirm", "protocols", "consistent"] },
+    { id: 17, cat: "Operations", q: "Handling urgent alerts?", a: "Prioritize immediately. Verify accuracy before escalation. Document all actions taken.", keywords: ["prioritize", "verify", "escalation", "document"] },
+    { id: 18, cat: "Coordination", q: "Ensuring smooth comms (Security/Programs/Drivers)?", a: "Set clear timelines. Advance movement plans. Proactive security updates.", keywords: ["timelines", "advance", "proactive", "coordination"] },
+    { id: 19, cat: "Coordination", q: "What to include in incident report?", a: "6 W's (Who, What, Where, When, Done, Needed) or ATMIST for medical.", keywords: ["6ws", "atmist", "classification", "who"] },
+    { id: 20, cat: "Operations", q: "Delayed movement without explanation?", a: "Flag delay, contact driver. Inform supervisor. Never assume delay is routine.", keywords: ["flag", "contact", "supervisor", "routine"] },
+    { id: 21, cat: "Tools", q: "Experience with QGIS?", a: "Spatial layers, KML export, daily map updates, route analysis.", keywords: ["qgis", "kml", "spatial", "mapping"] },
+    { id: 22, cat: "Tools", q: "How to generate/share KML?", a: "Select layers in QGIS, export as KML, share via email/WhatsApp.", keywords: ["export", "kml", "share", "visualize"] },
+    { id: 23, cat: "Tools", q: "What is ECP platform?", a: "Movement notification, route validation, deconfliction with military.", keywords: ["notification", "validation", "deconfliction", "military"] },
+    { id: 24, cat: "Tools", q: "Verify social media incidents?", a: "Cross-check with OCHA, INSO, HNS. Never act on unverified feeds.", keywords: ["cross-check", "ocha", "inso", "hns", "verified"] },
+    { id: 25, cat: "Tools", q: "Update maps daily?", a: "QGIS/Google My Maps for staff locations and incident markers.", keywords: ["qgis", "daily", "incident", "markers"] },
+    { id: 26, cat: "Tools", q: "Excel proficiency?", a: "VLOOKUP, Pivot Tables, VBA Macros for automated dashboards.", keywords: ["vlookup", "pivot", "macros", "automation"] },
+    { id: 27, cat: "Operations", q: "Fleet experience?", a: "Scheduling, logs, FLOWERS checks, driver debriefs.", keywords: ["scheduling", "logs", "flowers", "debrief"] },
+    { id: 28, cat: "Coordination", q: "Inducting new staff?", a: "Security Arrival Briefing: context, risks, SOPs, contacts.", keywords: ["briefing", "risks", "sops", "contacts"] },
+    { id: 29, cat: "General", q: "Handle stress in emergencies?", a: "Follow procedures. Contact, Assess, Escalate. Stay calm.", keywords: ["procedures", "assess", "escalate", "calm"] },
+    { id: 30, cat: "Personal", q: "Quick decision under pressure (Sam story)?", a: "Under fire in Khan Younis, moved Sam to shelter behind ruins and notified base.", keywords: ["yellow line", "sam", "shelter", "ruins", "notified"] },
+    { id: 31, cat: "General", q: "Strengths and weaknesses?", a: "Strength: detail-oriented. Weakness: detail slowing speed (improved by automation).", keywords: ["detail", "automation", "improvement"] },
+    { id: 32, cat: "General", q: "Motivation for repetitive tasks?", a: "Accuracy protects lives. Use automation to reduce fatigue.", keywords: ["accuracy", "lives", "automation", "purpose"] },
+    { id: 33, cat: "General", q: "Data confidentiality?", a: "Access control, encrypted channels, org policy.", keywords: ["authorized", "encrypted", "policy"] },
+    { id: 34, cat: "General", q: "First 30 days?", a: "Review systems, meet stakeholders, verify maps, identify gaps.", keywords: ["review", "stakeholders", "maps", "gaps"] },
+    { id: 35, cat: "PSEA", q: "What is PSEA?", a: "Protection from Sexual Exploitation and Abuse by staff toward beneficiaries.", keywords: ["beneficiaries", "sexual", "exploitation", "abuse"] },
+    { id: 36, cat: "PSEA", q: "PSEA vs Safeguarding?", a: "Safeguarding = broad (everyone). PSEA = specific (sexual/beneficiaries).", keywords: ["broad", "specific", "beneficiaries"] },
+    { id: 37, cat: "Access", q: "Acceptance Model?", a: "Security based on community trust, neutrality, and engagement.", keywords: ["trust", "neutrality", "engagement"] },
+    { id: 38, cat: "Access", q: "Maintain acceptance?", a: "Principled conduct, transparency, response to concerns.", keywords: ["conduct", "transparency", "feedback"] },
+    { id: 39, cat: "Access", q: "What is Deconfliction?", a: "Notifying military via OCHA HNS of staff/location info.", keywords: ["military", "ocha", "hns", "notify"] },
+    { id: 40, cat: "Access", q: "What is SHRER?", a: "Suspension, Hibernation, Relocation, Evacuation, Recovery.", keywords: ["suspension", "hibernation", "relocation", "evacuation", "recovery"] },
+    { id: 41, cat: "Access", q: "PACE planning?", a: "Primary, Alternative, Contingency, Emergency communication methods.", keywords: ["primary", "alternative", "contingency", "emergency"] },
+    { id: 42, cat: "Field", q: "Ahmed's Priority Matrix?", a: "1. Life-Safety, 2. Readiness (KML/HNS), 3. System Integrity (Tracker), 4. Admin.", keywords: ["life-safety", "readiness", "integrity", "matrix"] },
+    { id: 43, cat: "Field", q: "SAFE acronym?", a: "Send for help, Assess, Find team, Examine/treat.", keywords: ["send", "assess", "find", "examine"] },
+    { id: 44, cat: "Field", q: "6 W's?", a: "Who, What, Where, When, Done, Needed.", keywords: ["who", "what", "where", "when", "done", "needed"] },
+    { id: 45, cat: "Field", q: "FLOWERS checklist?", a: "Fuel, Lights, Oil, Water, Electrics, Rubber, Self.", keywords: ["fuel", "lights", "oil", "water", "electrics", "rubber", "self"] },
+    { id: 46, cat: "Field", q: "Cover vs Concealment?", a: "Cover stops bullets (concrete). Concealment only hides (wood).", keywords: ["stops bullets", "hides", "cover", "concealment"] },
+    { id: 47, cat: "Field", q: "UXO rules?", a: "Never touch, never approach, never pick up. Back out same path.", keywords: ["touch", "approach", "pick up", "back out"] },
+    { id: 48, cat: "General", q: "Cooper's Color Code?", a: "White (unaware), Yellow (alert), Orange (specific), Red (action).", keywords: ["white", "yellow", "orange", "red"] },
+    { id: 49, cat: "General", q: "5 Ways to Wellbeing?", a: "Connect, Active, Notice, Learn, Give.", keywords: ["connect", "active", "notice", "learn", "give"] },
+    { id: 50, cat: "General", q: "Responsibility for security?", a: "The individual is ultimately responsible for their own safety.", keywords: ["individual", "responsible", "own safety"] }
 ];
 
 let results = {};
@@ -89,89 +102,49 @@ let results = {};
 function checkAnswer(id) {
     const q = QUESTIONS.find(x => x.id === id);
     const userText = document.getElementById(`text-${id}`).value.toLowerCase();
-    
-    if (userText.length < 15) {
-        alert("Please write a detailed response to get an accurate auto-score.");
-        return;
-    }
-
-    // Auto-Grade Engine based on Keywords from[cite: 2]
-    let matches = 0;
-    let found = [];
-    q.keywords.forEach(word => {
-        if (userText.includes(word.toLowerCase())) {
-            matches++;
-            found.push(word);
-        }
-    });
-
+    if (userText.length < 15) { alert("Write more details to get a score!"); return; }
+    let matches = 0; let found = [];
+    q.keywords.forEach(word => { if (userText.includes(word.toLowerCase())) { matches++; found.push(word); } });
     const scorePct = (matches / q.keywords.length) * 100;
-    let grade = "incorrect";
-    let feedback = "Review the model answer. You need to use more technical terms like '" + q.keywords[0] + "'.";
-
-    if (scorePct >= 65) {
-        grade = "correct";
-        feedback = "Excellent! You hit all key technical terms required for the role.";
-    } else if (scorePct >= 30) {
-        grade = "partial";
-        feedback = "Good start, but you missed some critical operational keywords.";
-    }
-
+    let grade = "incorrect"; let feedback = "Try to use more technical terms like '" + q.keywords[0] + "'.";
+    if (scorePct >= 65) { grade = "correct"; feedback = "Excellent technical response!"; }
+    else if (scorePct >= 30) { grade = "partial"; feedback = "Good start, but missing operational keywords."; }
     results[id] = { grade, feedback, found };
-    updateStats();
-    renderList();
+    updateStats(); renderList();
     document.getElementById(`ans-${id}`).style.display = 'block';
 }
 
 function renderList() {
-    const list = document.getElementById('qList');
-    list.innerHTML = '';
+    const list = document.getElementById('qList'); list.innerHTML = '';
     QUESTIONS.forEach(q => {
         const res = results[q.id];
-        const div = document.createElement('div');
-        div.className = 'q-card';
-        div.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-                <span style="font-size:12px; font-weight:700; color:var(--red)">#${q.id} - ${q.cat}</span>
-                ${res ? `<span class="badge ${res.grade}">${res.grade}</span>` : ''}
-            </div>
-            <div style="font-weight:600; margin-bottom:15px">${q.q}</div>
-            
-            <textarea class="practice-input" id="text-${q.id}" placeholder="Type your practice response here..." ${res ? 'disabled' : ''}></textarea>
-            
-            <div style="display:flex; align-items:center">
-                ${!res ? `<button class="btn btn-check" onclick="checkAnswer(${q.id})">🤖 Auto-Check Answer</button>` : ''}
-                <button class="btn btn-view" onclick="toggleAns(${q.id})">View Model Ans</button>
-            </div>
-
-            <div class="ans-box" id="ans-${q.id}" style="${res ? 'display:block' : ''}">
-                <p style="color:var(--blue); font-size:13px; font-style:italic; margin-bottom:10px">${res ? res.feedback : ''}</p>
-                <p><strong>Model Answer:</strong> ${q.a}</p>
-                <div style="margin-top:10px">
-                    <strong>Required Keywords:</strong><br>
-                    ${q.keywords.map(k => `<span class="keyword-chip" style="${res && res.found.includes(k) ? 'background:#eafaf1; color:var(--green)' : ''}">${k}</span>`).join('')}
-                </div>
-            </div>
-        `;
+        const div = document.createElement('div'); div.className = 'q-card';
+        div.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:10px">
+            <span style="font-size:12px; font-weight:700; color:var(--red)">#${q.id} - ${q.cat}</span>
+            ${res ? `<span class="badge ${res.grade}">${res.grade}</span>` : ''}
+        </div><div style="font-weight:600; margin-bottom:15px">${q.q}</div>
+        <textarea class="practice-input" id="text-${q.id}" placeholder="Type your response..." ${res ? 'disabled' : ''}></textarea>
+        <div style="display:flex"><button class="btn btn-check" onclick="checkAnswer(${q.id})">🤖 Auto-Check</button>
+        <button class="btn btn-view" onclick="toggleAns(${q.id})">Model Ans</button></div>
+        <div class="ans-box" id="ans-${q.id}" style="${res ? 'display:block' : ''}">
+            <p style="color:var(--blue); font-size:13px; font-style:italic; margin-bottom:10px">${res ? res.feedback : ''}</p>
+            <p><strong>Model:</strong> ${q.a}</p>
+            <div style="margin-top:10px">${q.keywords.map(k => `<span class="chip" style="${res && res.found.includes(k) ? 'background:#eafaf1; color:var(--green)' : ''}">${k}</span>`).join('')}</div>
+        </div>`;
         list.appendChild(div);
     });
 }
 
-function toggleAns(id) {
-    const box = document.getElementById('ans-'+id);
-    box.style.display = (box.style.display === 'block') ? 'none' : 'block';
-}
+function toggleAns(id) { const box = document.getElementById('ans-'+id); box.style.display = (box.style.display === 'block') ? 'none' : 'block'; }
 
 function updateStats() {
     const graded = Object.keys(results).length;
     const correct = Object.values(results).filter(r => r.grade === 'correct').length;
     const partial = Object.values(results).filter(r => r.grade === 'partial').length;
     const score = graded > 0 ? Math.round(((correct + (partial * 0.5)) / graded) * 100) : 0;
-    
     document.getElementById('s-count').textContent = graded;
     document.getElementById('s-score').textContent = graded > 0 ? score + '%' : '—';
 }
-
 renderList();
 </script>
 </body>
